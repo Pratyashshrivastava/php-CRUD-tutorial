@@ -46,14 +46,51 @@ $insert = false;
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-  
+
 
 
   <title>iNotes - Notes taking made easy</title>
 
+
 </head>
 
 <body>
+  <!-- Edit modal -->
+  <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editmodal">
+    Edit modal
+  </button> -->
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fs-5" id="editModalLabel">Edit Note</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="/php-CRUD-tutorial/index.php" , method="post">
+            <input type="hidden" name="snoEdit" id="snoEdit">
+            <div class="mb-3">
+              <label for="title" class="form-label">Note Title</label>
+              <input type="text" class="form-control" id="titleEdit" name="titleEdit" aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3">
+              <label for="desc" class="form-label">Note Description</label>
+              <textarea class="form-control" id="descriptionEdit" name="descriptionEdit" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Note</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <!-- <div class="container-fluid"> -->
     <a class="navbar-brand" href="#">PHP CRUD</a>
@@ -107,7 +144,7 @@ $insert = false;
   ?>
   <div class="container my-5">
     <h2>Add a Note</h2>
-    <form action="/php-CRUD-tutorial/index.php", method= "post">
+    <form action="/php-CRUD-tutorial/index.php" , method="post">
       <div class="mb-3">
         <label for="title" class="form-label">Note Title</label>
         <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp">
@@ -121,7 +158,7 @@ $insert = false;
   </div>
 
   <div class="container my-4">
-    <table class="table" id= 'myTable'>
+    <table class="table" id='myTable'>
       <thead>
         <tr>
           <th scope="col">S no</th>
@@ -131,21 +168,25 @@ $insert = false;
         </tr>
       </thead>
       <tbody>
-      <?php  
+        <?php  
             $sql = "SELECT * FROM `notes`.`notes`" ;
             $result = mysqli_query($con, $sql );
+            $sno = 0;
             while($row = mysqli_fetch_assoc($result)){
+              $sno = $sno + 1;
               echo "<tr>
-              <th scope='row'>". $row['sno']. "</th>
+              <th scope='row'>". $sno. "</th>
               <td>". $row['title']. "</td>
               <td>". $row['description']. "</td>
-              <td> Actions </td>
+              <td><button class='edit btn btn-sm btn-primary' id=".$row['sno'].">Edit</button> <a href='/del'>Delete</a></td>
             </tr>";
               // echo $row['sno'] . ". Title ". $row['title']. " Desc is " . $row['description'];
             }
+
+
             ?>
-        
-        
+
+
       </tbody>
     </table>
   </div>
@@ -159,9 +200,29 @@ $insert = false;
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
     crossorigin="anonymous"></script>
-    <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script>
     let table = new DataTable('#myTable');
+  </script>
+  <script>
+    edits = document.getElementsByClassName('edit');
+    Array.from(edits).forEach((element) => {
+      element.addEventListener("click", (e) => {
+        console.log("edit",);
+        tr = e.target.parentNode.parentNode;
+        title = tr.getElementsByTagName("td")[0].innerText;
+        description = tr.getElementsByTagName("td")[1].innerText;
+        console.log(title, description);
+        titleEdit.value = title;
+        descriptionEdit.value = description; 
+        snoEdit.value = e.target.id;   
+        console.log(e.target.id);
+        $(document).ready(function () {
+          $('#editModal').modal('toggle');
+        });
+
+      })
+    })
   </script>
 
 </body>
