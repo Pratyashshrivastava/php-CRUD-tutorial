@@ -1,7 +1,9 @@
 <?php  
 // INSERT INTO `notes` (`sno`, `title`, `description`, `tstamp`) VALUES ('1', 'first note', 'letssss gooooo', current_timestamp());
 $insert = false;
-// Connect to the db
+$update = false;
+$delete = false;
+// Connect to the db 
   $server = "localhost";
   $username = "root";
   $password = "";
@@ -14,6 +16,13 @@ $insert = false;
   if(!$con){
     die("Failed to Connect: ". mysqli_connect_error());
   }
+
+  if(isset($_GET['delete'])){
+    $sno = $_GET['delete'];
+    $delete = true;
+    $sql = "DELETE FROM `notes`.`notes` WHERE `sno` = $sno";
+    $result = mysqli_query($con, $sql);
+  }
   if ($_SERVER['REQUEST_METHOD'] == "POST"){
   if(isset($_POST['snoEdit'])){
     // Update the record
@@ -24,12 +33,12 @@ $insert = false;
     // Sql query to be executed
     $sql = "UPDATE `notes`.`notes` SET `title` = '$title' , `description` = '$description' WHERE `notes`.`sno` = $sno";
     $result = mysqli_query($con, $sql);
-    // if($result){
-    //   echo "We updated the record successfully";
-    // }
-    // else{
-    //   "We could not update the record successfully";
-    // }
+    if($result){
+      $update = true;
+    }
+    else{
+      "We could not update the record successfully";
+    }
   }
   else{
       $title = $_POST['title'];
@@ -160,6 +169,26 @@ $insert = false;
   </div>";
   }
   ?>
+  <?php
+  if($delete == true){
+    echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+    <strong>Success!</strong> Your note has been deleted successfully
+    <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+      <span aria-hidden = 'true'>&times;</span>
+    </button>
+  </div>";
+  }
+  ?>
+  <?php
+  if($update == true){
+    echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+    <strong>Success!</strong> Your note has been updated successfully
+    <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+      <span aria-hidden = 'true'>&times;</span>
+    </button>
+  </div>";
+  }
+  ?>
   <div class="container my-5">
     <h2>Add a Note</h2>
     <form action="/php-CRUD-tutorial/index.php"  method="post">
@@ -196,7 +225,7 @@ $insert = false;
               <th scope='row'>". $sno. "</th>
               <td>". $row['title']. "</td>
               <td>". $row['description']. "</td>
-              <td><button class='edit btn btn-sm btn-primary' id=".$row['sno'].">Edit</button> <a href='/del'>Delete</a></td>
+              <td><button class='edit btn btn-sm btn-primary' id=".$row['sno'].">Edit</button> <button class='delete btn btn-sm btn-primary' id=d".$row['sno'].">Delete</button></td>
             </tr>";
               // echo $row['sno'] . ". Title ". $row['title']. " Desc is " . $row['description'];
             }
@@ -238,6 +267,24 @@ $insert = false;
         $(document).ready(function () {
           $('#editModal').modal('toggle');
         });
+
+      })
+    })
+
+    deletes = document.getElementsByClassName('delete');
+    Array.from(deletes).forEach((element) => {
+      element.addEventListener("click", (e) => {
+        console.log("delete",);
+        sno = e.target.id.substr(1,);  /* substr() function takes the entire string by removing the first element of that string */
+
+        if(confirm("Are you sure you want to delete this note!")){
+          console.log("yes");
+          window.location = `/php-CRUD-tutorial/index.php?delete=${sno}`;
+          // TODO: Create a form and use post request to submit a form
+        }
+        else{
+          console.log("no");
+        }
 
       })
     })
