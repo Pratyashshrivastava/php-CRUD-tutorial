@@ -97,8 +97,9 @@ $delete = false;
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
-          <form action="/php-CRUD-tutorial/index.php" , method="post">
+        <form action="/php-CRUD-tutorial/index.php" , method="post">
+          <div class="modal-body">
+
             <input type="hidden" name="snoEdit" id="snoEdit">
             <div class="mb-3">
               <label for="title" class="form-label">Note Title</label>
@@ -108,19 +109,19 @@ $delete = false;
               <label for="desc" class="form-label">Note Description</label>
               <textarea class="form-control" id="descriptionEdit" name="descriptionEdit" rows="3"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Update Note</button>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
+
+          </div>
+          <div class="modal-footer d-block mr-auto">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <!-- <div class="container-fluid"> -->
-    <a class="navbar-brand" href="#">PHP CRUD</a>
+    <a class="navbar-brand" href="#"> <img src="/php-CRUD-tutorial/logo.png" height="28px" alt=""></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -191,7 +192,7 @@ $delete = false;
   ?>
   <div class="container my-5">
     <h2>Add a Note</h2>
-    <form action="/php-CRUD-tutorial/index.php"  method="post">
+    <form action="/php-CRUD-tutorial/index.php" method="post">
       <div class="mb-3">
         <label for="title" class="form-label">Note Title</label>
         <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp">
@@ -261,8 +262,8 @@ $delete = false;
         description = tr.getElementsByTagName("td")[1].innerText;
         console.log(title, description);
         titleEdit.value = title;
-        descriptionEdit.value = description; 
-        snoEdit.value = e.target.id;   
+        descriptionEdit.value = description;
+        snoEdit.value = e.target.id;
         console.log(e.target.id);
         $(document).ready(function () {
           $('#editModal').modal('toggle');
@@ -277,12 +278,12 @@ $delete = false;
         console.log("delete",);
         sno = e.target.id.substr(1,);  /* substr() function takes the entire string by removing the first element of that string */
 
-        if(confirm("Are you sure you want to delete this note!")){
+        if (confirm("Are you sure you want to delete this note!")) {
           console.log("yes");
           window.location = `/php-CRUD-tutorial/index.php?delete=${sno}`;
           // TODO: Create a form and use post request to submit a form
         }
-        else{
+        else {
           console.log("no");
         }
 
